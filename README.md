@@ -1,3 +1,6 @@
+This is a test project for the mybookmarks project.
+
+
 # Frontend Boilerplate with React, Redux & TypeScript
 
 A bare minimum react-redux-webpack-typescript boilerplate with TodoMVC example. 
