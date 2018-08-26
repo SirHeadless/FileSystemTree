@@ -2,10 +2,12 @@ import {FileSystemEntryModel} from "../../models/FileSystemEntryModel";
 import * as React from "react";
 import {Category} from "../Category";
 import {Url} from "../Url";
+import {FileSystemTreeActions} from "../../actions";
 
 export namespace FileSystemTree {
   export interface Props {
     fileSystemEntries: FileSystemEntryModel[];
+    actions: FileSystemTreeActions
   }
 }
 
@@ -18,12 +20,12 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
       fileSystemEntries.length > 0 &&
         <ul className="fileSystemEntryTree">
           {fileSystemEntries.map(fileSystemEntry => {
-            return fileSystemEntry.isCategory?
+            return fileSystemEntry.type === FileSystemEntryModel.TYPE.CATEGORY?
               <li className="category">
                 <div>
                   <Category name={fileSystemEntry.name}/>
                 </div>
-                <FileSystemTree fileSystemEntries={fileSystemEntry.children}/>
+                <FileSystemTree fileSystemEntries={fileSystemEntry.children} actions={this.props.actions}/>
               </li> :
               <li className="url">
                 <Url name={fileSystemEntry.name}/>
