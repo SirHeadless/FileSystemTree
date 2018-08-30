@@ -37,7 +37,7 @@ export const fileSystemEntryReducer = handleActions<RootState.FileSystemEnrtySta
             id: action.payload.id,
             name: action.payload.name,
             children: action.payload.children,
-            type: action.payload.type
+            fileSystemEntryType: action.payload.fileSystemEntryType
           },
           ...state]
       } else {

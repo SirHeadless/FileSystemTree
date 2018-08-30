@@ -4,10 +4,10 @@ import {routerMiddleware} from "react-router-redux";
 import {History} from "history";
 import {rootReducer, RootState} from "app2/reducers";
 import {logger} from "app2/middleware";
-
+import { createLogger } from 'redux-logger';
 
 export function configureStore(history: History, initialState?: RootState): Store<RootState> {
-  let middleware = applyMiddleware(logger, routerMiddleware(history));
+  let middleware = applyMiddleware(logger, createLogger(), routerMiddleware(history));
 
   if (process.env.NODE_ENV !== 'production') {
     middleware = composeWithDevTools(middleware);

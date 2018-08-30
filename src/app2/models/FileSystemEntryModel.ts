@@ -2,8 +2,8 @@ import TYPE = FileSystemEntryModel.TYPE;
 
 export namespace FileSystemEntryModel {
   export enum TYPE {
-    CATEGORY = "Category",
-    URL = "Url"
+    CATEGORY = "CATEGORY",
+    URL = "URL"
   }
 }
 
@@ -12,6 +12,6 @@ export interface FileSystemEntryModel {
   name: string;
   children: FileSystemEntryModel[];
   // isCategory: boolean;
-  type: TYPE;
+  fileSystemEntryType: TYPE;
 }
 

@@ -5,35 +5,30 @@ import * as React from "react";
 import {connect} from "react-redux";
 import {FileSystemTreeActions} from "../../actions";
 import {FileSystemEntryModel} from "../../models";
-import {bindActionCreators, Dispatch} from "redux";
-import {omit} from "app2/utils";
 
-export namespace App2 {
+import loadTree = FileSystemTreeActions.loadTree
+import {Dispatch} from "redux";
+import {FileSystemTreeRequests} from "../../utils/fileSystemTreeRequests";
+
+namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
     fileSystemEntry: RootState.FileSystemEnrtyState;
-    actions: FileSystemTreeActions;
+    dispatch: Dispatch;
+  }
+
+  export interface State {
+    fileSystemEntry: RootState.FileSystemEnrtyState;
   }
 }
 
-@connect(
-  (state: RootState): Pick<App2.Props, 'fileSystemEntry'> => {
-    // const hash = state.router.location && state.router.location.hash.replace('#', '');
-    // const filter = FILTER_VALUES.find((value) => value === hash) || TodoModel.Filter.SHOW_ALL;
-    return { fileSystemEntry: state.fileSystemEntry};
-  },
-  (dispatch: Dispatch): Pick<App2.Props, 'actions'> => ({
-    actions: bindActionCreators(omit(FileSystemTreeActions, 'Type'), dispatch)
-  })
-)
+class MainPage extends React.Component<MainPage.Props> {
 
-
-export class App2 extends React.Component<App2.Props> {
-
-  constructor(props: App2.Props, context?: any) {
+  constructor(props: MainPage.Props, context?: any) {
     super(props, context);
   }
 
   componentDidMount() {
+
     const test = {
       id: 1,
       name: 'ersteCategory',
@@ -58,13 +53,25 @@ export class App2 extends React.Component<App2.Props> {
       type: FileSystemEntryModel.TYPE.CATEGORY
     }
 
-    this.props.actions.loadTree(test);
+    const test2 = FileSystemTreeRequests.fullFileSystemTree();
+
+
+    test2.then(response => {
+      console.log("Response:" + response.data);
+      const test3 = response.data as FileSystemEntryModel;
+      this.props.dispatch(loadTree(test3));
+
+    }).catch(error => {
+      console.log('Error: ' + error);
+    })
+
+    // this.props.dispatch(loadTree(test));
+
   }
 
   render() {
 
     const fileSystemEntry = this.props.fileSystemEntry;
-    const actions = this.props.actions;
     // const fileSystemEntry = [
     //   {
     //     id: 1,
@@ -91,8 +98,16 @@ export class App2 extends React.Component<App2.Props> {
     //   }];
     return (
       <div>
-        <FileSystemTree fileSystemEntries={fileSystemEntry} actions={actions}/>
+        <FileSystemTree fileSystemEntries={fileSystemEntry} />
       </div>
      );
   }
 }
+
+const mapStateToProps = (state: MainPage.State) => {
+  return { fileSystemEntry: state.fileSystemEntry};
+}
+
+export default connect(
+  mapStateToProps,
+)(MainPage)
