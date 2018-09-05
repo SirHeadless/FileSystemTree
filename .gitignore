@@ -7,3 +7,7 @@ node_modules
 build
 dist
 *.iml
+
+// Styles are done via less
+*.css
+*.css.map

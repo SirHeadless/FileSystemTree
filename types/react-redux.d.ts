@@ -3,6 +3,8 @@ import 'react-redux';
 declare module 'react-redux' {
   // Add removed inferrable type to support connect as decorator
   // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/16652
+  import {Component} from "react";
+
   export interface InferableComponentDecorator<TOwnProps> {
     <T extends Component<TOwnProps>>(component: T): T;
   }

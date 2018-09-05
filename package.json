@@ -54,6 +54,8 @@
   "dependencies": {
     "@types/axios": "^0.14.0",
     "classnames": "^2.2.6",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",

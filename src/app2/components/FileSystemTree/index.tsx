@@ -1,36 +1,46 @@
-import {FileSystemEntryModel} from "../../models/FileSystemEntryModel";
 import * as React from "react";
 import {Category} from "../Category";
 import {Url} from "../Url";
+import * as style from './style.less';
+import {CategoryModel} from "../../models/CategoryModel";
 
 export namespace FileSystemTree {
   export interface Props {
-    fileSystemEntries: FileSystemEntryModel[];
+    categories: CategoryModel[];
   }
 }
 
 export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   render() {
-    const fileSystemEntries = this.props.fileSystemEntries;
+    const categories = this.props.categories;
 
     return(
-      fileSystemEntries.length > 0 &&
-        <ul className="fileSystemEntryTree">
-          {fileSystemEntries.map(fileSystemEntry => {
-            return fileSystemEntry.fileSystemEntryType === FileSystemEntryModel.TYPE.CATEGORY?
-              <li className="category">
+      categories.length > 0 &&
+      <div>
+        <ul className={style.fileSystemEntryTree}>
+          {categories.map(category => {
+            return (
+              <div>
+              <li className={style.category}>
                 <div>
-                  <Category name={fileSystemEntry.name}/>
+                  <Category name={category.name}/>
                 </div>
-                <FileSystemTree fileSystemEntries={fileSystemEntry.children} />
-              </li> :
-              <li className="url">
-                <Url name={fileSystemEntry.name}/>
+                <FileSystemTree categories={category.categoryChildren} />
               </li>
+                <ul>
+                {category.urlChildren.map(url => {
+                  return (
+                    <li className={style.url}>
+                      <Url name={url.name}/>
+                    </li>)})}
+                </ul>
+              </div>)
           }
           )}
         </ul>
+      </div>
     );
+
   }
 }

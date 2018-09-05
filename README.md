@@ -1,5 +1,9 @@
 This is a test project for the mybookmarks project.
 
+Images of the folder and the link I have from 
+https://www. flaticon. com/ free-icon/ link-button_61353#term=link&page=1&position=9
+https://www. flaticon. com/ free-icon/ folder-storage_13941#term=folder&page=1&position=35
+
 
 # Frontend Boilerplate with React, Redux & TypeScript
 

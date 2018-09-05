@@ -10,8 +10,6 @@ export namespace FileSystemEntryModel {
 export interface FileSystemEntryModel {
   id: number;
   name: string;
-  children: FileSystemEntryModel[];
-  // isCategory: boolean;
   fileSystemEntryType: TYPE;
 }
 

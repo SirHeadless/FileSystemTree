@@ -4,11 +4,11 @@ import {RootState} from "../../reducers";
 import * as React from "react";
 import {connect} from "react-redux";
 import {FileSystemTreeActions} from "../../actions";
-import {FileSystemEntryModel} from "../../models";
 
 import loadTree = FileSystemTreeActions.loadTree
 import {Dispatch} from "redux";
-import {FileSystemTreeRequests} from "../../utils/fileSystemTreeRequests";
+import {FileSystemTreeRequests} from "../../utils/fileSystemTreeRequests/fileSystemTreeRequests";
+import {CategoryModel} from "../../models/CategoryModel";
 
 namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
@@ -29,36 +29,36 @@ class MainPage extends React.Component<MainPage.Props> {
 
   componentDidMount() {
 
-    const test = {
-      id: 1,
-      name: 'ersteCategory',
-      children: [{
-        id: 2,
-        name: 'ersteKindCategory',
-        children: [],
-        type: FileSystemEntryModel.TYPE.CATEGORY
-      },
-        {
-          id: 3,
-          name: 'zweiteKindCategory',
-          children: [{
-            id: 1,
-            name: 'url',
-            children: [],
-            type: FileSystemEntryModel.TYPE.URL
-          }],
-          type: FileSystemEntryModel.TYPE.CATEGORY
-        }
-      ],
-      type: FileSystemEntryModel.TYPE.CATEGORY
-    }
+    // const test = {
+    //   id: 1,
+    //   name: 'ersteCategory',
+    //   children: [{
+    //     id: 2,
+    //     name: 'ersteKindCategory',
+    //     children: [],
+    //     type: FileSystemEntryModel.TYPE.CATEGORY
+    //   },
+    //     {
+    //       id: 3,
+    //       name: 'zweiteKindCategory',
+    //       children: [{
+    //         id: 1,
+    //         name: 'url',
+    //         children: [],
+    //         type: FileSystemEntryModel.TYPE.URL
+    //       }],
+    //       type: FileSystemEntryModel.TYPE.CATEGORY
+    //     }
+    //   ],
+    //   type: FileSystemEntryModel.TYPE.CATEGORY
+    // }
 
     const test2 = FileSystemTreeRequests.fullFileSystemTree();
 
 
     test2.then(response => {
       console.log("Response:" + response.data);
-      const test3 = response.data as FileSystemEntryModel;
+      const test3 = response.data as CategoryModel;
       this.props.dispatch(loadTree(test3));
 
     }).catch(error => {
@@ -97,8 +97,8 @@ class MainPage extends React.Component<MainPage.Props> {
     //     isCategory: true
     //   }];
     return (
-      <div>
-        <FileSystemTree fileSystemEntries={fileSystemEntry} />
+      <div id="fileSystemEntryTree">
+        <FileSystemTree categories={fileSystemEntry} />
       </div>
      );
   }

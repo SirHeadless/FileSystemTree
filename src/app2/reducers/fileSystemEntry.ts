@@ -1,7 +1,7 @@
 import {RootState} from "./state";
 import {handleActions} from "redux-actions";
-import {FileSystemEntryModel} from "app2/models";
 import {FileSystemTreeActions} from "../actions";
+import {CategoryModel} from "../models/CategoryModel";
 
 const initalState: RootState.FileSystemEnrtyState =[];
   // {
@@ -28,7 +28,7 @@ const initalState: RootState.FileSystemEnrtyState =[];
   //   type: FileSystemEntryModel.TYPE.CATEGORY
   // }];
 
-export const fileSystemEntryReducer = handleActions<RootState.FileSystemEnrtyState, FileSystemEntryModel>(
+export const fileSystemEntryReducer = handleActions<RootState.FileSystemEnrtyState, CategoryModel>(
   {
     [FileSystemTreeActions.Type.LOAD_TREE]: (state, action) => {
       if (action.payload) {
@@ -36,7 +36,8 @@ export const fileSystemEntryReducer = handleActions<RootState.FileSystemEnrtySta
           {
             id: action.payload.id,
             name: action.payload.name,
-            children: action.payload.children,
+            categoryChildren: action.payload.categoryChildren,
+            urlChildren: action.payload.urlChildren,
             fileSystemEntryType: action.payload.fileSystemEntryType
           },
           ...state]
