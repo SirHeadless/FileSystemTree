@@ -79,7 +79,14 @@ export const categoryReducer = handleActions<RootState.FileSystemState, FileSyst
     } else {
       return state;
     }
-  }
+  },
+    [FileSystemTreeActions.Type.RELOAD_URLS]: (state, action) => {
+      if (action.payload) {
+        return {...state, urlsState: action.payload.urlsState};
+      } else {
+        return state;
+      }
+    }
   },
 
   // {
