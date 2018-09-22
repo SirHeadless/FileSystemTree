@@ -1,5 +1,5 @@
-import {FileSystemEntryModel} from "./FileSystemEntryModel";
-
-export interface UrlModel extends FileSystemEntryModel {
-
+export interface UrlModel {
+  urlId: number;
+  name: string;
+  parentCategoryId: number ;
 }

@@ -1,11 +1,14 @@
 import {RouterState} from "react-router-redux";
-import {CategoryModel} from "../models/CategoryModel";
+import {FileSystem} from "../models/FileSystem";
+
+
 
 export interface RootState {
-  fileSystemEntry: RootState.FileSystemEnrtyState;
+  fileSystemState: RootState.FileSystemState;
   router: RouterState;
 }
 
 export namespace RootState{
-  export type FileSystemEnrtyState = CategoryModel[];
+  export type FileSystemState = FileSystem;
+
 }

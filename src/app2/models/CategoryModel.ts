@@ -1,7 +1,7 @@
-import {FileSystemEntryModel} from "./FileSystemEntryModel";
-import {UrlModel} from "./UrlModel";
-
-export interface CategoryModel extends FileSystemEntryModel {
-  categoryChildren: CategoryModel[];
-  urlChildren: UrlModel[];
+export interface CategoryModel{
+  categoryId: number;
+  name: string;
+  // fileSystemEntryType: TYPE;
+  isExpanded: boolean;
+  parentId: number | null;
 }
