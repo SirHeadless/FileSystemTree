@@ -3,7 +3,6 @@ import {handleActions} from "redux-actions";
 import {FileSystemTreeActions} from "../actions";
 import {FileSystem} from "../models/FileSystem";
 
-
 // const categories : CategoryModel[] = [{
 //           categoryId: 1,
 //           name: 'ersteCategory',
@@ -73,7 +72,14 @@ export const categoryReducer = handleActions<RootState.FileSystemState, FileSyst
       } else {
         return state;
       }
+    },
+  [FileSystemTreeActions.Type.RELOAD_CATEGORIES]: (state, action) => {
+    if (action.payload) {
+      return {...state, categoriesState: action.payload.categoriesState};
+    } else {
+      return state;
     }
+  }
   },
 
   // {

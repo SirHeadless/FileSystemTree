@@ -136,7 +136,7 @@ class MainPage extends React.Component<MainPage.Props> {
 
     return (
       <div id="fileSystem">
-        <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState} parentId={null}/>
+        <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState} parentId={null} dispatch={this.props.dispatch}/>
       </div>
      );
   }
