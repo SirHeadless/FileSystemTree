@@ -11,6 +11,7 @@ import reloadCategories = FileSystemTreeActions.reloadCategories;
 import {Dispatch} from "redux";
 import {UrlRequests} from "../../utils/urlRequests/UrlRequests";
 import reloadUrls = FileSystemTreeActions.reloadUrls;
+import {CategoryRequests} from "../../utils/categoryRequests/CategoryRequests";
 
 export namespace FileSystemTree {
   export interface Props {
@@ -19,6 +20,11 @@ export namespace FileSystemTree {
     parentId: number | null;
     dispatch: Dispatch;
   }
+}
+
+interface DragData{
+  id: number
+  type: string
 }
 
 export class FileSystemTree extends React.Component<FileSystemTree.Props> {
@@ -37,9 +43,9 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     this.props.dispatch(reloadCategories(fileSystemJustCategories));
   }
 
-  onDragOver(e : any, categoryId: number){
+  onDragOver(e: any, categoryId: number) {
     e.preventDefault();
-    const categoryElementOrNull : HTMLElement | null= document.getElementById("Category"+categoryId);
+    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + categoryId);
 
     if (categoryElementOrNull) {
       const categoryElement: HTMLElement = categoryElementOrNull;
@@ -48,39 +54,59 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   }
 
-  onDragLeave(e : any, categoryId: number){
+  onDragLeave(e: any, categoryId: number) {
     e.preventDefault();
-    const categoryElementOrNull : HTMLElement | null= document.getElementById("Category"+categoryId);
+    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + categoryId);
 
     if (categoryElementOrNull) {
       const categoryElement: HTMLElement = categoryElementOrNull;
       categoryElement.setAttribute("style", "");
     }
-
   }
 
-  onDragStart(e: any, urlId: number) {
+  onDragUrlStart(e: any, urlId: number) {
     console.log("Dragstart", urlId);
-    e.dataTransfer.setData("urlId", urlId);
+    const dragData: DragData = {id: urlId, type: "URL"};
+    e.dataTransfer.setData("data", JSON.stringify(dragData));
   }
 
-  onDrop(e: any, categoryId: number){
+  onDragCategoryStart(e: any, categoryId: number) {
+    console.log("Dragstart", categoryId);
+    const dragData: DragData = {id: categoryId, type: "CATEGORY"}
+    e.dataTransfer.setData("data", JSON.stringify(dragData));
+  }
+
+  onDrop(e: any, categoryId: number) {
     this.onDragLeave(e, categoryId);
 
     console.log("DROP", categoryId);
-    let urlId = Number(e.dataTransfer.getData("urlId"));
+    let dragData: DragData = JSON.parse(e.dataTransfer.getData("data"));
+    if (dragData.type === "URL") {
+      let urlId = dragData.id;
 
-    const urlToUpdate: UrlModel | undefined = this.props.urls.find(url => {
-      return url.urlId === urlId
-    });
+      const urlToUpdate: UrlModel | undefined = this.props.urls.find(url => {
+        return url.urlId === urlId
+      });
 
-    if (urlToUpdate != undefined) {
-      urlToUpdate.parentCategoryId = categoryId;
-      this.updateUrl(urlToUpdate);
+      if (urlToUpdate != undefined) {
+        urlToUpdate.parentCategoryId = categoryId;
+        this.updateUrl(urlToUpdate);
+      }
+    } else if (dragData.type === "CATEGORY"){
+      let categoryToUpdateId = dragData.id;
+
+      const categoryToUpdate: CategoryModel | undefined = this.props.categories.find(category => {
+        return category.categoryId === categoryToUpdateId;
+      });
+
+      if (categoryToUpdate != undefined) {
+        categoryToUpdate.parentId = categoryId;
+        this.updateCategory(categoryToUpdate);
+      }
     }
   }
 
-  updateUrl(urlModelToUpdate: UrlModel){
+  updateUrl(urlModelToUpdate: UrlModel) {
     const urlUpdateRequest = UrlRequests.updateUrl(urlModelToUpdate);
 
     urlUpdateRequest.then(response => {
@@ -101,6 +127,28 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     });
   }
 
+  updateCategory(categoryModelToUpdate: CategoryModel) {
+    const categoryUpdateRequest = CategoryRequests.updateCategory(categoryModelToUpdate);
+
+    categoryUpdateRequest.then(response => {
+      console.log("Response:" + response.data);
+      const responseCategory = response.data as CategoryModel;
+      var categoryIndex = this.props.categories.findIndex(categroy => categroy.categoryId === responseCategory.categoryId);
+      const newCatgegoryState = this.props.categories;
+      newCatgegoryState[categoryIndex] = responseCategory;
+
+      const fileSystemJustWithUrls: FileSystem =
+        {
+          categoriesState: newCatgegoryState,
+          urlsState: []
+        }
+      this.props.dispatch(reloadCategories(fileSystemJustWithUrls));
+    }).catch(error => {
+      console.log('Error: ' + error);
+    });
+  }
+
+
   render() {
     const categories = this.props.categories;
     const urls = this.props.urls;
@@ -115,9 +163,11 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
                 <div>
                   <li className={style.category}>
                     <div id={"Category" + category.categoryId} onClick={() => this.toogleExpand(category.categoryId)}
-                         onDragOver={(e)=>this.onDragOver(e, category.categoryId)}
-                         onDragLeave={(e)=>this.onDragLeave(e, category.categoryId)}
-                         onDrop={(e)=>this.onDrop(e, category.categoryId)} >
+                         draggable
+                         onDragStart={(e) => this.onDragCategoryStart(e, category.categoryId)}
+                         onDragOver={(e) => this.onDragOver(e, category.categoryId)}
+                         onDragLeave={(e) => this.onDragLeave(e, category.categoryId)}
+                         onDrop={(e) => this.onDrop(e, category.categoryId)}>
                       <Category name={category.name} categoryId={category.categoryId}/>
                     </div>
                     {category.isExpanded ?
@@ -127,7 +177,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
                         <ul>
                           {StoreUtils.getAllChildUrls(urls, category.categoryId).map(url => {
                             return (
-                              <div draggable onDragStart={(e) => this.onDragStart(e, url.urlId)}>
+                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)}>
                                 <li className={style.url}>
                                   <Url name={url.name}/>
                                 </li>

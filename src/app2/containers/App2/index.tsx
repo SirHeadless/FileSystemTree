@@ -4,6 +4,7 @@ import {RootState} from "../../reducers";
 import * as React from "react";
 import {connect} from "react-redux";
 import {FileSystemTreeActions} from "../../actions";
+import {Container, Row, Col} from 'react-grid-system';
 
 import loadTree = FileSystemTreeActions.loadCategories
 import {Dispatch} from "redux";
@@ -13,6 +14,7 @@ import {UrlRequests} from "../../utils/urlRequests/UrlRequests";
 import loadUrls = FileSystemTreeActions.loadUrls;
 import {UrlModel} from "../../models";
 import {FileSystem} from "../../models/FileSystem";
+import {UrlDisplay} from "../../components/UrlDisplay";
 
 namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
@@ -63,9 +65,11 @@ class MainPage extends React.Component<MainPage.Props> {
 
     categoriesRequest.then(response => {
       console.log("Response:" + response.data);
-      const fileSystemJustWithCategories : FileSystem =
-        { categoriesState: response.data as CategoryModel[],
-          urlsState : []}
+      const fileSystemJustWithCategories: FileSystem =
+        {
+          categoriesState: response.data as CategoryModel[],
+          urlsState: []
+        }
 
       this.props.dispatch(loadTree(fileSystemJustWithCategories));
 
@@ -75,15 +79,16 @@ class MainPage extends React.Component<MainPage.Props> {
 
     urlRequest.then(response => {
       console.log("Response:" + response.data);
-      const fileSystemJustWithUrls : FileSystem =
-        { categoriesState: [],
-          urlsState : response.data as UrlModel[]}
+      const fileSystemJustWithUrls: FileSystem =
+        {
+          categoriesState: [],
+          urlsState: response.data as UrlModel[]
+        }
       this.props.dispatch(loadUrls(fileSystemJustWithUrls));
 
     }).catch(error => {
       console.log('Error: ' + error);
     });
-
 
 
     // tast2.then(response => {
@@ -136,9 +141,19 @@ class MainPage extends React.Component<MainPage.Props> {
 
     return (
       <div id="fileSystem">
-        <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState} parentId={null} dispatch={this.props.dispatch}/>
+        <Container>
+          <Row>
+            <Col sm={6}>
+              <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState}
+                              parentId={null} dispatch={this.props.dispatch}/>
+            </Col>
+            <Col sm={6}>
+              <UrlDisplay displayedUrl={fileSystemState.urlsState[0]}/>
+            </Col>
+          </Row>
+        </Container>
       </div>
-     );
+    );
   }
 }
 
