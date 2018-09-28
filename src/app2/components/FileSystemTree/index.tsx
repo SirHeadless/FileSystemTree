@@ -37,8 +37,26 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     this.props.dispatch(reloadCategories(fileSystemJustCategories));
   }
 
-  onDragOver(e : any){
+  onDragOver(e : any, categoryId: number){
     e.preventDefault();
+    const categoryElementOrNull : HTMLElement | null= document.getElementById("Category"+categoryId);
+
+    if (categoryElementOrNull) {
+      const categoryElement: HTMLElement = categoryElementOrNull;
+      categoryElement.setAttribute("style", "background-color:red");
+    }
+
+  }
+
+  onDragLeave(e : any, categoryId: number){
+    e.preventDefault();
+    const categoryElementOrNull : HTMLElement | null= document.getElementById("Category"+categoryId);
+
+    if (categoryElementOrNull) {
+      const categoryElement: HTMLElement = categoryElementOrNull;
+      categoryElement.setAttribute("style", "");
+    }
+
   }
 
   onDragStart(e: any, urlId: number) {
@@ -47,6 +65,8 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
   }
 
   onDrop(e: any, categoryId: number){
+    this.onDragLeave(e, categoryId);
+
     console.log("DROP", categoryId);
     let urlId = Number(e.dataTransfer.getData("urlId"));
 
@@ -56,31 +76,29 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
     if (urlToUpdate != undefined) {
       urlToUpdate.parentCategoryId = categoryId;
-      const urlUpdateRequest = UrlRequests.updateUrl(urlToUpdate);
-
-      urlUpdateRequest.then(response => {
-        console.log("Response:" + response.data);
-        const responseUrl = response.data as UrlModel;
-        var urlIndex = this.props.urls.findIndex(url => url.urlId === responseUrl.urlId);
-        const newUrlState = this.props.urls;
-        newUrlState[urlIndex] = responseUrl;
-
-        const fileSystemJustWithUrls: FileSystem =
-          {
-            categoriesState: [],
-            urlsState: newUrlState
-          }
-        this.props.dispatch(reloadUrls(fileSystemJustWithUrls));
-      }).catch(error => {
-        console.log('Error: ' + error);
-      });
-
-      // const fileSystemJustCategories: FileSystem = {
-      //   categoriesState: [],
-      //   urlsState: urls
-      // }
-      // this.props.dispatch(reloadUrls(fileSystemJustCategories))
+      this.updateUrl(urlToUpdate);
     }
+  }
+
+  updateUrl(urlModelToUpdate: UrlModel){
+    const urlUpdateRequest = UrlRequests.updateUrl(urlModelToUpdate);
+
+    urlUpdateRequest.then(response => {
+      console.log("Response:" + response.data);
+      const responseUrl = response.data as UrlModel;
+      var urlIndex = this.props.urls.findIndex(url => url.urlId === responseUrl.urlId);
+      const newUrlState = this.props.urls;
+      newUrlState[urlIndex] = responseUrl;
+
+      const fileSystemJustWithUrls: FileSystem =
+        {
+          categoriesState: [],
+          urlsState: newUrlState
+        }
+      this.props.dispatch(reloadUrls(fileSystemJustWithUrls));
+    }).catch(error => {
+      console.log('Error: ' + error);
+    });
   }
 
   render() {
@@ -96,7 +114,10 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
               return (
                 <div>
                   <li className={style.category}>
-                    <div onClick={() => this.toogleExpand(category.categoryId)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>this.onDrop(e, category.categoryId)} >
+                    <div id={"Category" + category.categoryId} onClick={() => this.toogleExpand(category.categoryId)}
+                         onDragOver={(e)=>this.onDragOver(e, category.categoryId)}
+                         onDragLeave={(e)=>this.onDragLeave(e, category.categoryId)}
+                         onDrop={(e)=>this.onDrop(e, category.categoryId)} >
                       <Category name={category.name} categoryId={category.categoryId}/>
                     </div>
                     {category.isExpanded ?
