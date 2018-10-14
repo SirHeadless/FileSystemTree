@@ -8,22 +8,27 @@ import {Container, Row, Col} from 'react-grid-system';
 
 import loadTree = FileSystemTreeActions.loadCategories
 import {Dispatch} from "redux";
-import {CategoryModel} from "../../models/CategoryModel";
+import {CategoryModel} from "../../models";
 import {CategoryRequests} from "../../utils/categoryRequests/CategoryRequests";
 import {UrlRequests} from "../../utils/urlRequests/UrlRequests";
 import loadUrls = FileSystemTreeActions.loadUrls;
 import {UrlModel} from "../../models";
 import {FileSystem} from "../../models/FileSystem";
 import {UrlDisplay} from "../../components/UrlDisplay";
+import {UrlFormFields} from "../../models/UrlFormFields";
 
 namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
     fileSystemState: RootState.FileSystemState;
+    markedUrlState: UrlModel | null;
+    urlFormFields: UrlFormFields;
     dispatch: Dispatch;
   }
 
   export interface State {
     fileSystemState: RootState.FileSystemState;
+    markedUrlState: UrlModel;
+    urlFormFields: UrlFormFields;
   }
 }
 
@@ -36,29 +41,6 @@ class MainPage extends React.Component<MainPage.Props> {
 
   componentDidMount() {
 
-    // const test = {
-    //   id: 1,
-    //   name: 'ersteCategory',
-    //   children: [{
-    //     id: 2,
-    //     name: 'ersteKindCategory',
-    //     children: [],
-    //     type: FileSystemEntryModel.TYPE.CATEGORY
-    //   },
-    //     {
-    //       id: 3,
-    //       name: 'zweiteKindCategory',
-    //       children: [{
-    //         id: 1,
-    //         name: 'url',
-    //         children: [],
-    //         type: FileSystemEntryModel.TYPE.URL
-    //       }],
-    //       type: FileSystemEntryModel.TYPE.CATEGORY
-    //     }
-    //   ],
-    //   type: FileSystemEntryModel.TYPE.CATEGORY
-    // }
     const categoriesRequest = CategoryRequests.allCategories();
     const urlRequest = UrlRequests.allUrls();
 
@@ -69,7 +51,7 @@ class MainPage extends React.Component<MainPage.Props> {
         {
           categoriesState: response.data as CategoryModel[],
           urlsState: []
-        }
+        };
 
       this.props.dispatch(loadTree(fileSystemJustWithCategories));
 
@@ -83,7 +65,7 @@ class MainPage extends React.Component<MainPage.Props> {
         {
           categoriesState: [],
           urlsState: response.data as UrlModel[]
-        }
+        };
       this.props.dispatch(loadUrls(fileSystemJustWithUrls));
 
     }).catch(error => {
@@ -91,53 +73,13 @@ class MainPage extends React.Component<MainPage.Props> {
     });
 
 
-    // tast2.then(response => {
-    //   console.log("Response:" + response.data);
-    //   const tast3 = response.data as CategoryModel[];
-    //   this.props.dispatch(loadCategories(test3));
-    //
-    // }).catch(error => {
-    //   console.log('Error: ' + error);
-    // })
-
-    // this.props.dispatch(loadCategories(test));
-
   }
 
   render() {
 
     const fileSystemState = this.props.fileSystemState;
+    const markedUrlState = this.props.markedUrlState != null ? {...this.props.markedUrlState} : null;
 
-    // const fileSystemState = this.props.fileSystemState;
-
-    // const categories : CategoryModel[] = [{
-    //           id: 1,
-    //           name: 'ersteCategory',
-    //           isExpanded: true,
-    //           parentId: null
-    // },
-    //   {
-    //     id: 2,
-    //     name: 'zweiteCategory',
-    //     isExpanded: false,
-    //     parentId: 1
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'dritteCategory',
-    //     isExpanded: true,
-    //     parentId: 1
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'vierteCategory',
-    //     isExpanded: true,
-    //     parentId: 2
-    //   }]
-    // const fileSystemState = {
-    //   categoriesState: categories,
-    //   urlsState: []
-    // }
 
     return (
       <div id="fileSystem">
@@ -147,9 +89,12 @@ class MainPage extends React.Component<MainPage.Props> {
               <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState}
                               parentId={null} dispatch={this.props.dispatch}/>
             </Col>
-            <Col sm={6}>
-              <UrlDisplay displayedUrl={fileSystemState.urlsState[0]}/>
-            </Col>
+            {markedUrlState ?
+              <Col sm={6}>
+                <UrlDisplay displayedUrl={markedUrlState} urlFormFields={this.props.urlFormFields}
+                            dispatch={this.props.dispatch} urls={fileSystemState.urlsState}/>
+              </Col> : <div></div>
+            }
           </Row>
         </Container>
       </div>
@@ -158,8 +103,12 @@ class MainPage extends React.Component<MainPage.Props> {
 }
 
 const mapStateToProps = (state: MainPage.State) => {
-  return {fileSystemState: state.fileSystemState};
-}
+  return {
+    fileSystemState: state.fileSystemState,
+    markedUrlState: state.markedUrlState,
+    urlFormFields: state.urlFormFields
+  };
+};
 
 export default connect(
   mapStateToProps,

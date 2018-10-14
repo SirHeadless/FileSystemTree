@@ -2,7 +2,7 @@ export interface UrlModel {
   urlId: number;
   name: string;
   url: string;
-  description: String;
+  description: string;
   parentCategoryId: number;
   rating: number;
 }

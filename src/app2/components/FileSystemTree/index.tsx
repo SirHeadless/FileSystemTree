@@ -12,6 +12,8 @@ import {Dispatch} from "redux";
 import {UrlRequests} from "../../utils/urlRequests/UrlRequests";
 import reloadUrls = FileSystemTreeActions.reloadUrls;
 import {CategoryRequests} from "../../utils/categoryRequests/CategoryRequests";
+import {MarkedUrlActions} from "../../actions/markedUrl";
+import loadMarkedUrl = MarkedUrlActions.loadMarkedUrl;
 
 export namespace FileSystemTree {
   export interface Props {
@@ -42,6 +44,16 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     }
     this.props.dispatch(reloadCategories(fileSystemJustCategories));
   }
+
+  markCategory(id: number) {
+    const url: UrlModel | undefined = this.props.urls.find(url => {
+      return url.urlId === id;
+    })
+    console.log(url);
+    this.props.dispatch(loadMarkedUrl(url));
+  }
+
+
 
   onDragOver(e: any, categoryId: number) {
     e.preventDefault();
@@ -177,7 +189,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
                         <ul>
                           {StoreUtils.getAllChildUrls(urls, category.categoryId).map(url => {
                             return (
-                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)}>
+                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)} onClick={() => this.markCategory(url.urlId)}>
                                 <li className={style.url}>
                                   <Url name={url.name}/>
                                 </li>
