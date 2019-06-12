@@ -45,12 +45,20 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     this.props.dispatch(reloadCategories(fileSystemJustCategories));
   }
 
-  markCategory(id: number) {
+  markUrl(id: number) {
     const url: UrlModel | undefined = this.props.urls.find(url => {
       return url.urlId === id;
     })
     console.log(url);
-    this.props.dispatch(loadMarkedUrl(url));
+    url && this.props.dispatch(loadMarkedUrl(url));
+
+    // Just for test! If this is missing it will not go to render App2/index.tsx again
+    const fileSystemJustWithUrls: FileSystem =
+      {
+        categoriesState: [],
+        urlsState: this.props.urls
+      };
+    url && this.props.dispatch(reloadUrls(fileSystemJustWithUrls));
   }
 
 
@@ -189,7 +197,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
                         <ul>
                           {StoreUtils.getAllChildUrls(urls, category.categoryId).map(url => {
                             return (
-                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)} onClick={() => this.markCategory(url.urlId)}>
+                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)} onClick={() => this.markUrl(url.urlId)}>
                                 <li className={style.url}>
                                   <Url name={url.name}/>
                                 </li>

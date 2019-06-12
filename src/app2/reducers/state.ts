@@ -1,15 +1,17 @@
 import {RouterState} from "react-router-redux";
 import {FileSystem} from "../models/FileSystem";
-import {UrlModel} from "../models";
+import {CategoryModel, UrlModel} from "../models";
 import {UrlFormFields} from "../models/UrlFormFields";
+import {CategoryFormFields} from "../models/CategoryFormFields";
 
 
 
 export interface RootState {
   fileSystemState: RootState.FileSystemState;
   router: RouterState;
-  markedUrlState: UrlModel;
+  markedElementState: UrlModel | CategoryModel | null;
   urlFormFields: UrlFormFields;
+  categoryFormFields: CategoryFormFields;
 }
 
 export namespace RootState{

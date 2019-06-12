@@ -16,12 +16,16 @@ import {UrlModel} from "../../models";
 import {FileSystem} from "../../models/FileSystem";
 import {UrlDisplay} from "../../components/UrlDisplay";
 import {UrlFormFields} from "../../models/UrlFormFields";
+import {CategoryDisplay} from "../../components/CategoryDisplay";
+import {CategoryFormFields} from "../../models/CategoryFormFields";
 
 namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
     fileSystemState: RootState.FileSystemState;
-    markedUrlState: UrlModel | null;
+    markedElementState: UrlModel | CategoryModel | null;
+    markedCategoryState: CategoryModel | null;
     urlFormFields: UrlFormFields;
+    categoryFormFields: CategoryFormFields;
     dispatch: Dispatch;
   }
 
@@ -29,6 +33,10 @@ namespace MainPage {
     fileSystemState: RootState.FileSystemState;
     markedUrlState: UrlModel;
     urlFormFields: UrlFormFields;
+    categoryFormFields: CategoryFormFields;
+    markedElementState: UrlModel | CategoryModel | null;
+
+
   }
 }
 
@@ -75,30 +83,46 @@ class MainPage extends React.Component<MainPage.Props> {
 
   }
 
+  instanceOfUrlModel(object: UrlModel | CategoryModel): object is UrlModel {
+    // return object.discriminator === 'UrlModel';
+    return 'url' in object;
+
+  }
+
+
   render() {
 
     const fileSystemState = this.props.fileSystemState;
-    const markedUrlState = this.props.markedUrlState != null ? {...this.props.markedUrlState} : null;
+    const markedElementState: UrlModel | CategoryModel | null = this.props.markedElementState != null ? {...this.props.markedElementState} : null;
 
+    var elementDisplay;
+    if (markedElementState != null) {
+      if (this.instanceOfUrlModel(markedElementState)) {
+        elementDisplay =  <UrlDisplay displayedUrl={markedElementState} urlFormFields={this.props.urlFormFields}
+                                                         dispatch={this.props.dispatch} urls={fileSystemState.urlsState}/>
+      } else {
+        elementDisplay = <CategoryDisplay displayedCategory={markedElementState} categoryFormFields={this.props.categoryFormFields}
+                                     dispatch={this.props.dispatch} categories={fileSystemState.categoriesState}/>
+      }
+    } else {
+      elementDisplay = <div></div>
+    }
 
-    return (
-      <div id="fileSystem">
-        <Container>
-          <Row>
-            <Col sm={6}>
-              <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState}
-                              parentId={null} dispatch={this.props.dispatch}/>
-            </Col>
-            {markedUrlState ?
+      return (
+        <div id="fileSystem">
+          <Container>
+            <Row>
               <Col sm={6}>
-                <UrlDisplay displayedUrl={markedUrlState} urlFormFields={this.props.urlFormFields}
-                            dispatch={this.props.dispatch} urls={fileSystemState.urlsState}/>
-              </Col> : <div></div>
-            }
-          </Row>
-        </Container>
-      </div>
-    );
+                <FileSystemTree categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState}
+                                parentId={null} dispatch={this.props.dispatch}/>
+              </Col>
+              <Col sm={6}>
+                {elementDisplay}
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      );
   }
 }
 
@@ -106,8 +130,10 @@ const mapStateToProps = (state: MainPage.State) => {
   return {
     fileSystemState: state.fileSystemState,
     markedUrlState: state.markedUrlState,
-    urlFormFields: state.urlFormFields
-  };
+    urlFormFields: state.urlFormFields,
+    markedElementState: state.markedElementState
+
+};
 };
 
 export default connect(

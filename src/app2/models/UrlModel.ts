@@ -1,4 +1,5 @@
-export interface UrlModel {
+export interface UrlModel  {
+  discriminator: 'UrlModel';
   urlId: number;
   name: string;
   url: string;

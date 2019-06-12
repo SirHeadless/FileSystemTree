@@ -15,7 +15,6 @@ export function configureStore(history: History, initialState?: RootState): Stor
 
   const store = createStore(rootReducer as any, initialState as any, middleware) as Store<RootState>;
 
-  // This is for hot reload!?
   if (module.hot) {
     module.hot.accept('app2/reducers', () => {
       const nextReducer = require('app2/reducers');
