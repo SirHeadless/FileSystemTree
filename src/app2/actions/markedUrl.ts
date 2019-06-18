@@ -1,5 +1,5 @@
 import {createAction} from "redux-actions";
-import {UrlModel} from "../models";
+import {CategoryModel, UrlModel} from "../models";
 
 export namespace MarkedUrlActions {
   export enum Type {
@@ -7,8 +7,8 @@ export namespace MarkedUrlActions {
     UPDATE_MARKED_URL = 'UPDATE_MARKED_URL'
   }
 
-  export const loadMarkedUrl = createAction<UrlModel>(Type.LOAD_MARKED_URL);
-  export const updateMarkedUrl = createAction<UrlModel>(Type.UPDATE_MARKED_URL);
+  export const loadMarkedUrl = createAction<UrlModel | CategoryModel >(Type.LOAD_MARKED_URL);
+  export const updateMarkedUrl = createAction<UrlModel | CategoryModel>(Type.UPDATE_MARKED_URL);
 
 }
 

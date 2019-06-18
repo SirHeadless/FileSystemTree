@@ -131,6 +131,7 @@ const mapStateToProps = (state: MainPage.State) => {
     fileSystemState: state.fileSystemState,
     markedUrlState: state.markedUrlState,
     urlFormFields: state.urlFormFields,
+    categoryFormFields: state.categoryFormFields,
     markedElementState: state.markedElementState
 
 };
