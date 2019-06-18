@@ -25,6 +25,12 @@ export class CategoryDisplay extends React.Component<CategoryDisplay.Props>{
 
   constructor(props: CategoryDisplay.Props) {
     super(props);
+
+    this.toggleIsDescriptionEditField = this.toggleIsDescriptionEditField.bind(this);
+    this.toggleIsNameEditField = this.toggleIsNameEditField.bind(this);
+    this.updateNameField = this.updateNameField.bind(this);
+    this.updateDescriptionField = this.updateDescriptionField.bind(this);
+    this.submitCategory = this.submitCategory.bind(this);
   }
 
   toggleIsNameEditField() {
