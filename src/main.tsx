@@ -5,8 +5,8 @@ import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 // import { configureStore } from 'app/store  ';
 // import { App } from './app';
-import {App2} from "./app2";
-import { configureStore } from 'app2/store';
+import {App2} from "./app2/app2";
+import { configureStore } from 'app2/store/store';
 
 // prepare store
 const history = createBrowserHistory();

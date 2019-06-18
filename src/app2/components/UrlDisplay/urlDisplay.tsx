@@ -5,7 +5,7 @@ import {UrlFormFields} from "../../models/UrlFormFields";
 import {Dispatch} from "redux";
 import {UrlFormFieldsActions} from "../../actions/urlFormFields";
 import updateUrlFormFields = UrlFormFieldsActions.updateUrlFormFields;
-import {UrlField} from "./UrlField";
+import {UrlField} from "./UrlField/urlField";
 import {MarkedUrlActions} from "../../actions/markedUrl";
 import updateMarkedUrl = MarkedUrlActions.updateMarkedUrl;
 import {UrlRequests} from "../../utils/urlRequests/UrlRequests";

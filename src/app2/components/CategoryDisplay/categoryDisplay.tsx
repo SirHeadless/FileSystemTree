@@ -2,7 +2,7 @@ import * as React from "react";
 import {CategoryModel} from "../../models";
 import {CategoryFormFields} from "../../models/CategoryFormFields";
 import {Dispatch} from "redux";
-import {CategoryField} from "./CategoryField";
+import {CategoryField} from "./CategoryField/categoryField";
 import {CategoryFormFieldsActions} from "../../actions/categoryFromFields";
 import updateCategoryFormFields = CategoryFormFieldsActions.updateCategoryFormFields;
 import {MarkedCategoryActions} from "../../actions/markedCategoryActions";
