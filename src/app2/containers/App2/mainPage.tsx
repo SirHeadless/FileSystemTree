@@ -1,5 +1,5 @@
 import {RouteComponentProps} from "react-router";
-import {FileSystemTree} from "../../components/components";
+import {FileSystemTree} from "../../components/FileSystemTree/fileSystemTree";
 import {RootState} from "../../reducers";
 import * as React from "react";
 import {connect} from "react-redux";
@@ -131,6 +131,7 @@ const mapStateToProps = (state: MainPage.State) => {
     fileSystemState: state.fileSystemState,
     markedUrlState: state.markedUrlState,
     urlFormFields: state.urlFormFields,
+    categoryFormFields: state.categoryFormFields,
     markedElementState: state.markedElementState
 
 };

@@ -52,13 +52,29 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     console.log(url);
     url && this.props.dispatch(loadMarkedUrl(url));
 
-    // Just for test! If this is missing it will not go to render App2/index.tsx again
+    // Just for test! If this is missing it will not go to render App2/fileSystemTree.tsx again
     const fileSystemJustWithUrls: FileSystem =
       {
         categoriesState: [],
         urlsState: this.props.urls
       };
     url && this.props.dispatch(reloadUrls(fileSystemJustWithUrls));
+  }
+
+  markCategory(id: number) {
+    const category: CategoryModel | undefined = this.props.categories.find(category => {
+      return category.categoryId === id;
+    })
+    console.log(category);
+    category && this.props.dispatch(loadMarkedUrl(category));
+
+    // Just for test! If this is missing it will not go to render App2/fileSystemTree.tsx again
+    const fileSystemJustWithUrls: FileSystem =
+      {
+        categoriesState: [],
+        urlsState: this.props.urls
+      };
+    category && this.props.dispatch(reloadUrls(fileSystemJustWithUrls));
   }
 
 
@@ -168,6 +184,11 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     });
   }
 
+  toggleExpandAndMarkCategory(categoryId: number) {
+    this.toogleExpand(categoryId)
+    this.markCategory(categoryId)
+  }
+
 
   render() {
     const categories = this.props.categories;
@@ -182,7 +203,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
               return (
                 <div>
                   <li className={style.category}>
-                    <div id={"Category" + category.categoryId} onClick={() => this.toogleExpand(category.categoryId)}
+                    <div id={"Category" + category.categoryId} onClick={() => this.toggleExpandAndMarkCategory(category.categoryId)}
                          draggable
                          onDragStart={(e) => this.onDragCategoryStart(e, category.categoryId)}
                          onDragOver={(e) => this.onDragOver(e, category.categoryId)}
