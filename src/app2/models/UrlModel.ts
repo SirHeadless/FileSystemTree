@@ -1,9 +1,9 @@
 export interface UrlModel  {
   discriminator: 'UrlModel';
-  urlId: number;
+  id: number;
   name: string;
   url: string;
   description: string;
-  parentCategoryId: number;
+  parentId: number;
   rating: number;
 }

@@ -74,7 +74,7 @@ export class UrlDisplay extends React.Component<UrlDisplay.Props> {
     urlUpdateRequest.then(response => {
       console.log("Response:" + response.data);
       const responseUrl = response.data as UrlModel;
-      const urlIndex = this.props.urls.findIndex(url => url.urlId === responseUrl.urlId);
+      const urlIndex = this.props.urls.findIndex(url => url.id === responseUrl.id);
       const newUrlState = this.props.urls;
       newUrlState[urlIndex] = responseUrl;
 

@@ -18,6 +18,8 @@ import {UrlDisplay} from "../../components/UrlDisplay/urlDisplay";
 import {UrlFormFields} from "../../models/UrlFormFields";
 import {CategoryDisplay} from "../../components/CategoryDisplay/categoryDisplay";
 import {CategoryFormFields} from "../../models/CategoryFormFields";
+import { AddAndRemoveDisplay } from "app2/components/components";
+import { FileSystemUtils } from "app2/utils/fileSystemUtils/fileSystemUtils";
 
 namespace MainPage {
   export interface Props extends RouteComponentProps<void> {
@@ -83,29 +85,26 @@ class MainPage extends React.Component<MainPage.Props> {
 
   }
 
-  instanceOfUrlModel(object: UrlModel | CategoryModel): object is UrlModel {
-    // return object.discriminator === 'UrlModel';
-    return 'url' in object;
-
-  }
-
-
   render() {
 
     const fileSystemState = this.props.fileSystemState;
     const markedElementState: UrlModel | CategoryModel | null = this.props.markedElementState != null ? {...this.props.markedElementState} : null;
 
     var elementDisplay;
+    var addAndRemoveDisplay;
     if (markedElementState != null) {
-      if (this.instanceOfUrlModel(markedElementState)) {
+      if (FileSystemUtils.instanceOfUrlModel(markedElementState)) {
         elementDisplay =  <UrlDisplay displayedUrl={markedElementState} urlFormFields={this.props.urlFormFields}
                                                          dispatch={this.props.dispatch} urls={fileSystemState.urlsState}/>
       } else {
         elementDisplay = <CategoryDisplay displayedCategory={markedElementState} categoryFormFields={this.props.categoryFormFields}
                                      dispatch={this.props.dispatch} categories={fileSystemState.categoriesState}/>
       }
+      addAndRemoveDisplay = <AddAndRemoveDisplay markedElement={markedElementState} categories={fileSystemState.categoriesState} urls={fileSystemState.urlsState} dispatch={this.props.dispatch}/>
     } else {
       elementDisplay = <div></div>
+      addAndRemoveDisplay = <div>invisible</div>
+
     }
 
       return (
@@ -118,6 +117,11 @@ class MainPage extends React.Component<MainPage.Props> {
               </Col>
               <Col sm={6}>
                 {elementDisplay}
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={12}>
+                {addAndRemoveDisplay}
               </Col>
             </Row>
           </Container>

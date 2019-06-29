@@ -33,7 +33,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   toogleExpand(id: number) {
     const categoies: CategoryModel[] = this.props.categories.map(category => {
-      if (category.categoryId === id) {
+      if (category.id === id) {
         return {...category, isExpanded: !category.isExpanded}
       }
       return category;
@@ -47,7 +47,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   markUrl(id: number) {
     const url: UrlModel | undefined = this.props.urls.find(url => {
-      return url.urlId === id;
+      return url.id === id;
     })
     console.log(url);
     url && this.props.dispatch(loadMarkedUrl(url));
@@ -63,7 +63,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   markCategory(id: number) {
     const category: CategoryModel | undefined = this.props.categories.find(category => {
-      return category.categoryId === id;
+      return category.id === id;
     })
     console.log(category);
     category && this.props.dispatch(loadMarkedUrl(category));
@@ -79,9 +79,9 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
 
 
-  onDragOver(e: any, categoryId: number) {
+  onDragOver(e: any, id: number) {
     e.preventDefault();
-    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + categoryId);
+    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + id);
 
     if (categoryElementOrNull) {
       const categoryElement: HTMLElement = categoryElementOrNull;
@@ -90,9 +90,9 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
 
   }
 
-  onDragLeave(e: any, categoryId: number) {
+  onDragLeave(e: any, id: number) {
     e.preventDefault();
-    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + categoryId);
+    const categoryElementOrNull: HTMLElement | null = document.getElementById("Category" + id);
 
     if (categoryElementOrNull) {
       const categoryElement: HTMLElement = categoryElementOrNull;
@@ -100,43 +100,43 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     }
   }
 
-  onDragUrlStart(e: any, urlId: number) {
-    console.log("Dragstart", urlId);
-    const dragData: DragData = {id: urlId, type: "URL"};
+  onDragUrlStart(e: any, id: number) {
+    console.log("Dragstart", id);
+    const dragData: DragData = {id: id, type: "URL"};
     e.dataTransfer.setData("data", JSON.stringify(dragData));
   }
 
-  onDragCategoryStart(e: any, categoryId: number) {
-    console.log("Dragstart", categoryId);
-    const dragData: DragData = {id: categoryId, type: "CATEGORY"}
+  onDragCategoryStart(e: any, id: number) {
+    console.log("Dragstart", id);
+    const dragData: DragData = {id: id, type: "CATEGORY"}
     e.dataTransfer.setData("data", JSON.stringify(dragData));
   }
 
-  onDrop(e: any, categoryId: number) {
-    this.onDragLeave(e, categoryId);
+  onDrop(e: any, parentCategoryid: number) {
+    this.onDragLeave(e, parentCategoryid);
 
-    console.log("DROP", categoryId);
+    console.log("DROP", parentCategoryid);
     let dragData: DragData = JSON.parse(e.dataTransfer.getData("data"));
     if (dragData.type === "URL") {
-      let urlId = dragData.id;
+      let id = dragData.id;
 
       const urlToUpdate: UrlModel | undefined = this.props.urls.find(url => {
-        return url.urlId === urlId
+        return url.id === id
       });
 
       if (urlToUpdate != undefined) {
-        urlToUpdate.parentCategoryId = categoryId;
+        urlToUpdate.parentId = parentCategoryid;
         this.updateUrl(urlToUpdate);
       }
     } else if (dragData.type === "CATEGORY"){
       let categoryToUpdateId = dragData.id;
 
       const categoryToUpdate: CategoryModel | undefined = this.props.categories.find(category => {
-        return category.categoryId === categoryToUpdateId;
+        return category.id === categoryToUpdateId;
       });
 
       if (categoryToUpdate != undefined) {
-        categoryToUpdate.parentId = categoryId;
+        categoryToUpdate.parentId = parentCategoryid;
         this.updateCategory(categoryToUpdate);
       }
     }
@@ -148,7 +148,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     urlUpdateRequest.then(response => {
       console.log("Response:" + response.data);
       const responseUrl = response.data as UrlModel;
-      var urlIndex = this.props.urls.findIndex(url => url.urlId === responseUrl.urlId);
+      var urlIndex = this.props.urls.findIndex(url => url.id === responseUrl.id);
       const newUrlState = this.props.urls;
       newUrlState[urlIndex] = responseUrl;
 
@@ -169,7 +169,7 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     categoryUpdateRequest.then(response => {
       console.log("Response:" + response.data);
       const responseCategory = response.data as CategoryModel;
-      var categoryIndex = this.props.categories.findIndex(categroy => categroy.categoryId === responseCategory.categoryId);
+      var categoryIndex = this.props.categories.findIndex(categroy => categroy.id === responseCategory.id);
       const newCatgegoryState = this.props.categories;
       newCatgegoryState[categoryIndex] = responseCategory;
 
@@ -184,9 +184,9 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
     });
   }
 
-  toggleExpandAndMarkCategory(categoryId: number) {
-    this.toogleExpand(categoryId)
-    this.markCategory(categoryId)
+  toggleExpandAndMarkCategory(id: number) {
+    this.toogleExpand(id)
+    this.markCategory(id)
   }
 
 
@@ -203,22 +203,22 @@ export class FileSystemTree extends React.Component<FileSystemTree.Props> {
               return (
                 <div>
                   <li className={style.category}>
-                    <div id={"Category" + category.categoryId} onClick={() => this.toggleExpandAndMarkCategory(category.categoryId)}
+                    <div id={"Category" + category.id} onClick={() => this.toggleExpandAndMarkCategory(category.id)}
                          draggable
-                         onDragStart={(e) => this.onDragCategoryStart(e, category.categoryId)}
-                         onDragOver={(e) => this.onDragOver(e, category.categoryId)}
-                         onDragLeave={(e) => this.onDragLeave(e, category.categoryId)}
-                         onDrop={(e) => this.onDrop(e, category.categoryId)}>
-                      <Category name={category.name} categoryId={category.categoryId}/>
+                         onDragStart={(e) => this.onDragCategoryStart(e, category.id)}
+                         onDragOver={(e) => this.onDragOver(e, category.id)}
+                         onDragLeave={(e) => this.onDragLeave(e, category.id)}
+                         onDrop={(e) => this.onDrop(e, category.id)}>
+                      <Category name={category.name} id={category.id}/>
                     </div>
                     {category.isExpanded ?
                       <div>
-                        <FileSystemTree categories={categories} urls={urls} parentId={category.categoryId}
+                        <FileSystemTree categories={categories} urls={urls} parentId={category.id}
                                         dispatch={this.props.dispatch}/>
                         <ul>
-                          {StoreUtils.getAllChildUrls(urls, category.categoryId).map(url => {
+                          {StoreUtils.getAllChildUrls(urls, category.id).map(url => {
                             return (
-                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.urlId)} onClick={() => this.markUrl(url.urlId)}>
+                              <div draggable onDragStart={(e) => this.onDragUrlStart(e, url.id)} onClick={() => this.markUrl(url.id)}>
                                 <li className={style.url}>
                                   <Url name={url.name}/>
                                 </li>

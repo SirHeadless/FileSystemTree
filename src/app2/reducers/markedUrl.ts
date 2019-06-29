@@ -5,14 +5,14 @@ import {MarkedCategoryActions} from "../actions/markedCategoryActions";
 
 
 const initalState = null;
-// const initalState  = {discriminator: 'UrlModel', urlId: 6, name: "fsf", url: "sdf", description: "sdfd",
-// parentCategoryId: null,
+// const initalState  = {discriminator: 'UrlModel', id: 6, name: "fsf", url: "sdf", description: "sdfd",
+// parentId: null,
 // rating: null};
-// const initalState = {discriminator: 'UrlModel', categoryId: null,  urlId: 6, name: "fsf", url: "sdf", description: "sdfd",
-//   parentCategoryId: 1,
+// const initalState = {discriminator: 'UrlModel', id: null,  id: 6, name: "fsf", url: "sdf", description: "sdfd",
+//   parentId: 1,
 //   rating: 1,   isExpanded: false, parentId: null};
-// const initalState : UrlModel = {discriminator: 'UrlModel',  urlId: 6, name: "fsf", url: "sdf", description: "sdfd",
-//   parentCategoryId: 1,
+// const initalState : UrlModel = {discriminator: 'UrlModel',  id: 6, name: "fsf", url: "sdf", description: "sdfd",
+//   parentId: 1,
 //   rating: 1};
 
 

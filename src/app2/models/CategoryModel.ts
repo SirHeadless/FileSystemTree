@@ -1,6 +1,6 @@
 export interface CategoryModel{
   discriminator: 'CategoryModel';
-  categoryId: number;
+  id: number;
   name: string;
   description: string;
   // fileSystemEntryType: TYPE;

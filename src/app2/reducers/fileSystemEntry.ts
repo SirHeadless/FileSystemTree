@@ -4,25 +4,25 @@ import {FileSystemTreeActions} from "../actions";
 import {FileSystem} from "../models/FileSystem";
 
 // const categories : CategoryModel[] = [{
-//           categoryId: 1,
+//           id: 1,
 //           name: 'ersteCategory',
 //           isExpanded: true,
 //           parentId: null
 // },
 //   {
-//     categoryId: 2,
+//     id: 2,
 //     name: 'zweiteCategory',
 //     isExpanded: false,
 //     parentId: 1
 //   },
 //   {
-//     categoryId: 3,
+//     id: 3,
 //     name: 'dritteCategory',
 //     isExpanded: true,
 //     parentId: 1
 //   },
 //   {
-//     categoryId: 4,
+//     id: 4,
 //     name: 'vierteCategory',
 //     isExpanded: true,
 //     parentId: 2

@@ -66,7 +66,7 @@ export class CategoryDisplay extends React.Component<CategoryDisplay.Props>{
     categoryUpdateRequest.then(response => {
       console.log("Response:" + response.data);
       const responseCategory = response.data as CategoryModel;
-      const categoryIndex = this.props.categories.findIndex(category => category.categoryId === responseCategory.categoryId);
+      const categoryIndex = this.props.categories.findIndex(category => category.id === responseCategory.id);
       const newCategoryState = this.props.categories;
       newCategoryState[categoryIndex] = responseCategory;
 
