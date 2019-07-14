@@ -14,4 +14,8 @@ export class CategoryRequests {
   static removeCategory(id: number) : Promise<any>{
     return Axios.delete("http://localhost:8080/category/" + id, { auth: {username: "admin", password: "admin"}})
   }
+
+  static addCategory(category: CategoryModel) : Promise<any> {
+    return Axios.post("http://localhost:8080/category", category, {auth: {username: "admin", password: "admin"}})
+  }
 }

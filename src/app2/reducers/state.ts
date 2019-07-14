@@ -12,6 +12,7 @@ export interface RootState {
   markedElementState: UrlModel | CategoryModel | null;
   urlFormFields: UrlFormFields;
   categoryFormFields: CategoryFormFields;
+  form: CategoryModel;
 }
 
 export namespace RootState{
