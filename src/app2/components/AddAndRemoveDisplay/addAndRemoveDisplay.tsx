@@ -11,7 +11,7 @@ import reloadCategories = FileSystemTreeActions.reloadCategories;
 import reloadUrls = FileSystemTreeActions.reloadUrls;
 import { Dispatch } from "redux";
 import { FileSystemUtils } from "app2/utils/fileSystemUtils/fileSystemUtils";
-import  AddCategoryForm  from "./AddCategoryForm/addCategoryForm";
+import { AddFileSystem } from "./AddFileSystem/AddFileSystem";
 
 
 export namespace AddAndRemoveDisplay {
@@ -20,6 +20,7 @@ export namespace AddAndRemoveDisplay {
     categories: CategoryModel[];
     urls: UrlModel[];
     dispatch: Dispatch;
+    addFileSystemToggle: Boolean;
   }
 }
 
@@ -112,7 +113,7 @@ export class AddAndRemoveDisplay extends React.Component<AddAndRemoveDisplay.Pro
     return (
       <div>
             <button onClick={() => this.removeElement(markedElement)}>Remove</button>
-            { parent !== null ? <AddCategoryForm parentName={parent.name} dispatch={this.props.dispatch} onSubmit={this.onSubmit}/> : <div></div>}
+            {parent != null ? <AddFileSystem addFileSystemToggle={this.props.addFileSystemToggle} parentName={parent.name} dispatch={this.props.dispatch} categories={this.props.categories} urls={this.props.urls} markedElement={this.props.markedElement}/> : <div></div>}
       </div>
     )
   }

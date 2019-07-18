@@ -6,6 +6,7 @@ import {markedElementReducer} from "./markedUrl";
 import {urlFormFieldsReducer} from "./urlFormFields";
 import {categoryFormFieldsReducer} from "./categoryFormFields";
 import {reducer as reduxFormReducer } from 'redux-form';
+import { addFileSystemToggleReducer } from "./addFileSystemToggle";
 
 export {RootState, RouterState}
 
@@ -16,5 +17,6 @@ export const rootReducer = combineReducers<RootState>(
     markedElementState: markedElementReducer as any,
     urlFormFields: urlFormFieldsReducer as any,
     categoryFormFields: categoryFormFieldsReducer as any,
-    form: reduxFormReducer as any
+    form: reduxFormReducer as any, 
+    addFileSystemToggle: addFileSystemToggleReducer as any
   });

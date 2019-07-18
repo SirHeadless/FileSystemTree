@@ -14,4 +14,8 @@ export class UrlRequests{
   static removeUrl(id: number) : Promise<any>{
     return Axios.delete("http://localhost:8080/url/" + id, { auth: {username: "admin", password: "admin"}})
   }
+
+  static addUrl(url: UrlModel) : Promise<any> {
+    return Axios.post("http://localhost:8080/url", url, {auth: {username: "admin", password: "admin"}})
+  }
 }

@@ -12,7 +12,8 @@ export interface RootState {
   markedElementState: UrlModel | CategoryModel | null;
   urlFormFields: UrlFormFields;
   categoryFormFields: CategoryFormFields;
-  form: CategoryModel;
+  form: CategoryModel | UrlModel;
+  addFileSystemToggle: Boolean;
 }
 
 export namespace RootState{
